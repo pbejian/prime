@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!-- Pierre BÉJIAN - Avril 2017 - licence Creative Commons Zero CC0 -->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<link rel="apple-touch-icon" href="img/Prime_touch.png" />
+<title>Décomposition en facteurs premiers</title>
+</head>
+<!-------------------------------------------------------------------------------------->
+<!-- Using MathJax (local install) for display maths using LaTeX notations.  -->
+<!-------------------------------------------------------------------------------------->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+</script>
+<script type="text/javascript" src="MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML-full"></script>	
+<!-------------------------------------------------------------------------------------->
+<!-- Other things  -->
+<!-------------------------------------------------------------------------------------->
+<link rel="stylesheet" href="js/highlight/styles/monokai-sublime.css">
+<link rel="stylesheet" href="js/highlight/styles/arta.css">
+<link rel="stylesheet" href="js/highlight/styles/atom-one-dark.css">
+<script src="js/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-------------------------------------------------------------------------------------->
+<!-- HERE WE GO, my personnal JS scripts. To place in a different file in the future... --> 
+<!-------------------------------------------------------------------------------------->
+<script>
+function smallest_divisor(n) {
+  for (var d=2; d<=n; d=d+1) {
+    if (n % d === 0) {
+      return d;
+    }
+  }
+}
+//------------------------------------------------------------------------------  
+function factorization(n) {
+  var T = [];
+  var m = n;
+  //var k = 0;
+  console.log(m);
+  while (m != 1) {
+    var p = smallest_divisor(m);
+    // We have to compute the exposant
+    var a = 0;
+    while (m % Math.pow(p,a) === 0) {
+      a = a + 1
+    }
+    // Here we know that the exponent of p un the factorization of n is a-1
+    // We add [p,a-1] to T:
+    T.push([p,a-1])
+    // And we divide m by p^(a-1)
+    m = m / Math.pow(p,a-1) // Question : is-it a float or an int ? Hum...
+    //k = k + 1;
+  }
+  return T;
+} 
+//------------------------------------------------------------------------------
+function display_factorization(T) {
+  var R = "";
+  for (var i=0; i<T.length-1;i=i+1) {
+    var X = T[i];
+    var p = X[0];
+    var a = X[1];
+    R = R + p + "^{" + a + "}\\times";
+  };
+  // Last step, without the "times symbol":
+  i = T.length-1
+  X = T[i];
+  p = X[0];
+  a = X[1];
+  R = R + p + "^{" + a + "}";
+  // The function return noting but display the result string
+  document.write("$$" + R + "$$");
+}  
+
+//------------------------------------------------------------------------------
+  
+function factorization_as_a_string(T) {
+  var R = "";
+  for (var i=0; i<T.length-1;i=i+1) {
+    var X = T[i];
+    var p = X[0];
+    var a = X[1];
+    R = R + p + "^{" + a + "}\\times";
+  };
+  // Last step, without the "times symbol":
+  i = T.length-1
+  X = T[i];
+  p = X[0];
+  a = X[1];
+  R = R + p + "^{" + a + "}";
+  // The function return the string to display
+  return "$$" + R + "$$";
+}  
+</script>
+<!-------------------------------------------------------------------------------------->
+<!-- BODY -->  
+<!-------------------------------------------------------------------------------------->
+<body>
+<div id="page">  
+<h1>Décomposition en facteurs premiers</h1>
+<!-------------------------------------------------------------------------------------->
+<!-- Section 1 --> 
+<!-------------------------------------------------------------------------------------->
+<h2>1. La théorie </h2>
+<p>
+Le <em>théorème fondamental de l'arithmétique</em> affirme que tout entier $n\geqslant 2$ peut se 
+décomposer (de manière unique) comme un produit de nombre(s) premier(s). Une telle 
+décomposition est de la forme :
+$$ n = p_1^{a_1}p_2^{a_2}\cdots p_r^{a_r}$$
+où \( p_1 < p_2 < \cdots < p_r \) sont des nombres premiers et $a_1,a_2,\dots,a_r$ sont des 
+entiers positifs.
+</p>
+<!-------------------------------------------------------------------------------------->
+<!-- Section 2 --> 
+<!-------------------------------------------------------------------------------------->
+<h2>2. La pratique </h2>
+<p>
+Choisissez un nombre entier plus grand que $2$ (ne forcez pas trop sur la taille de cet entier) 
+et validez.
+<br>
+<br>
+<div style="text-align:center">
+<form name="myform">
+<input id ="piRinput" type="text" name="myint" value="4">
+<input id ="piRbuitton" type="button" value="Décomposer" onClick="factorize()">
+<!--document.forms["myform"].elements["myint"].value)">-->
+<!-- onClick="alert('Intgeger to factorize:' + this.form.myint.value)"> -->
+</form>
+</div>
+<br>
+
+<div id="piRoutput">$$2^2$$</div>
+
+<!-------------------------------------------------------------------------------------->
+<script>
+
+function factorize() { 
+  var s = document.forms["myform"].elements["myint"].value;  
+  var n = parseInt(s);
+  if (Number.isInteger(n) & n >= 1) {
+    var piRnode = document.getElementById("piRoutput"); 
+    piRnode.innerHTML = factorization_as_a_string(factorization(n));
+    //outnode = document.getElementById("piRoutput");
+    //document.getElementById("outputNode");  
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,piRnode]);
+  } else {
+    alert("The argument given is not an integer greater than 2. Sorry.");      
+  } 
+}
+</script>
+<!-------------------------------------------------------------------------------------->
+<br>
+<br>
+<footer>
+<div style="text-align:left; color: black; font-size:80%">
+Pierre BÉJIAN - Avril 2017  
+</div>
+<a href="https://twitter.com/profbejian/with_replies" target="_blank">
+<img src="img/logo_twitter.png" style="width: 35px">
+</a>
+&nbsp;&nbsp;
+<a href="https://fr.linkedin.com/in/bejian" target="_blank">
+<img src="img/logo_linkedin.png" style="width: 35px">
+</a>
+&nbsp;&nbsp;
+<a href="https://www.bejian.fr/" target="_blank">
+<img src="img/logo_PB.png" style="width: 35px">
+</a>
+&nbsp;&nbsp;
+</footer>
+<!-------------------------------------------------------------------------------------->
+</div>
+<!-- END OF div page -->
+</body>
+<!-------------------------------------------------------------------------------------->
+<!-- END OF BODY  
+<!-------------------------------------------------------------------------------------->
+</html>
